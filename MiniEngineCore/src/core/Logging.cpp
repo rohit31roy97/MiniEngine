@@ -1,10 +1,11 @@
-#include "Logging.hpp"
-#include "Types.hpp"
+#include "core/Types.hpp"
+#include "core/Logging.hpp"
+#include "core/Assertions.hpp"
 
 #include <exception>
 #include <iostream>
 
-// Temporary not optimal solution
+// Temporary not optimal solution (but so far pretty fast!)
 #include <sstream>
 #include <stdarg.h>
 
@@ -45,4 +46,12 @@ MINI_API void MiniEngineCore::Logger::LogMessage(LogLevel level, const char* msg
 
     // Print TODO: make this more platform specific output and optimal
     std::cout << final_message.str();
+}
+
+void MiniEngineCore::LogAssertionFail(const char* expression, const char* message, const char* filename, int32 line_no) {
+    MiniEngineCore::Logger::LogMessage(                             \
+        MiniEngineCore::LogLevel::FATAL,                            \
+        "Assertion Failed: %s | Message: %s | File: %s, Line: %d",  \
+        expression, message, filename, line_no                      \
+    );
 }

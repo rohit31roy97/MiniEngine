@@ -1,5 +1,7 @@
-#include "Tests.hpp"
-#include "Logging.hpp"
+#include "core/Tests.hpp"
+#include "core/Logging.hpp"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -46,4 +48,25 @@ MINI_API void MiniEngineCore::RunTests() {
         std::cout << "All Tests Cleared!" << std::endl;
     }
 }
+
+MINI_API void MiniEngineCore::BenchmarkSPDLOG(const int32 n_iterations) {
+    auto console = spdlog::stdout_color_mt("console");
+    for (int32 i = 0; i < n_iterations; i++) {
+        spdlog::get("console")->info("Testing SPDLOG: {:4.2f}", 3.141596);
+    }
+}
+
+MINI_API void MiniEngineCore::BenchmarkInternalLog(const int32 n_iterations) {
+    bool8 init_flag = MiniEngineCore::Logger::Initialize();
+    if (init_flag == FALSE) {
+        std::cout << "Could not initialize Logger" << std::endl;
+        return;
+    }
+
+    for (int32 i = 0; i < n_iterations; i++) {
+        MLOG_INFO("Testing internal log: %4.2f", 3.141596);
+    }
+}
+
+
 
