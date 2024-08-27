@@ -68,10 +68,12 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES})
 add_library(miniengine::minienginecorelib ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PUBLIC include/)
+target_include_directories(${PROJECT_NAME} PRIVATE external/spdlog/include/)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/build")
+
 
 if (WIN32)
   message(STATUS "CREATING BUILD FOR WINDOWS")
