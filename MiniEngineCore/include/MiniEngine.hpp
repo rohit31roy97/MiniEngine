@@ -1,4 +1,5 @@
 # pragma once
 
-#include "MiniEngineCore.hpp"
-#include "Tests.hpp"
+#include "core/Logging.hpp"
+#include "core/Assertions.hpp"
+#include "core/Tests.hpp"
