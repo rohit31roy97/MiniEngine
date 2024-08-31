@@ -1,28 +1,30 @@
 #include "core/Tests.hpp"
 #include "core/Logging.hpp"
+#include "core/MemoryManagement.hpp"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 #include <iostream>
 #include <stdexcept>
 
+namespace MiniEngineCore {
 
-MINI_API int MiniEngineCore::AddTestFunction(int a, int b) {
+int AddTestFunction(int a, int b) {
     std::cout << "Testing Add Function" << std::endl;
     return (a + b);
 }
 
-MINI_API void MiniEngineCore::HelloWorldTestFunction() {
+void HelloWorldTestFunction() {
     std::cout << "Testing Console OUT, ERR" << std::endl;
     std::cout << "[OUT] Hello world!" << std::endl;
     std::cerr << "[ERR] Hello world!" << std::endl;
 }
 
-MINI_API void MiniEngineCore::RunTests() {
-    MiniEngineCore::HelloWorldTestFunction();
+void RunTests() {
+    HelloWorldTestFunction();
 
     std::cout << "From Console OUT: MiniEngine Running Tests:" << std::endl;
-    bool8 init_flag = MiniEngineCore::Logger::Initialize();
+    bool8 init_flag = Logger::Initialize();
     if (init_flag == FALSE) {
         std::cout << "Could not initialize Logger" << std::endl;
         return;
@@ -40,7 +42,7 @@ MINI_API void MiniEngineCore::RunTests() {
 
     const int a = 200;
     const int b = 100;
-    int test_val = MiniEngineCore::AddTestFunction(100, 200);
+    int test_val = AddTestFunction(100, 200);
     if (test_val != (a+b)) {
         throw std::logic_error("Test: returned sum did not match expected value = 300");
     }
@@ -49,15 +51,15 @@ MINI_API void MiniEngineCore::RunTests() {
     }
 }
 
-MINI_API void MiniEngineCore::BenchmarkSPDLOG(const int32 n_iterations) {
+void BenchmarkSPDLOG(const int32 n_iterations) {
     auto console = spdlog::stdout_color_mt("console");
     for (int32 i = 0; i < n_iterations; i++) {
         spdlog::get("console")->info("Testing SPDLOG: {:4.2f}", 3.141596);
     }
 }
 
-MINI_API void MiniEngineCore::BenchmarkInternalLog(const int32 n_iterations) {
-    bool8 init_flag = MiniEngineCore::Logger::Initialize();
+void BenchmarkInternalLog(const int32 n_iterations) {
+    bool8 init_flag = Logger::Initialize();
     if (init_flag == FALSE) {
         std::cout << "Could not initialize Logger" << std::endl;
         return;
@@ -68,5 +70,12 @@ MINI_API void MiniEngineCore::BenchmarkInternalLog(const int32 n_iterations) {
     }
 }
 
+void TestMemoryMonitor() {
+    MemoryMonitor::Initialize();
+    MemoryMonitor::UpdateAllocations(AllocationType::HEAP, AllocationTag::EVENT, 10989);
+    MemoryMonitor::UpdateAllocations(AllocationType::STACK, AllocationTag::ARRAY, 178979978);
+    MLOG_INFO(MemoryMonitor::GetCurrentUsageStatusByTag());
+    MemoryMonitor::Deinitialize();
+}
 
-
+}
