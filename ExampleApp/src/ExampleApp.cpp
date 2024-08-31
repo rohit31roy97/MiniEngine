@@ -6,6 +6,7 @@ int main() {
     MiniEngineCore::RunTests();
     MASSERT(1 > 0);
     MASSERT(1 == 0);
+    MiniEngineCore::TestMemoryMonitor();
 
     /*time_t rawtime;*/
     /*struct tm* timeinfo;*/
