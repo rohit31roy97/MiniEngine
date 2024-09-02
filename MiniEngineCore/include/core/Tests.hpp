@@ -10,5 +10,6 @@ namespace MiniEngineCore {
     MINI_API void BenchmarkSPDLOG(const int32 n_iterations);
     MINI_API void BenchmarkInternalLog(const int32 n_iterations);
     MINI_API void TestMemoryMonitor();
+    MINI_API void TestWindowSystem();
 }
 

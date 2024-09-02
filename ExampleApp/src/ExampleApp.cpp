@@ -1,4 +1,5 @@
 #include "MiniEngine.hpp"
+#include "core/Tests.hpp"
 #include <cstdlib>
 /*#include <time.h>*/
 
@@ -7,6 +8,7 @@ int main() {
     MASSERT(1 > 0);
     MASSERT(1 == 0);
     MiniEngineCore::TestMemoryMonitor();
+    MiniEngineCore::TestWindowSystem();
 
     /*time_t rawtime;*/
     /*struct tm* timeinfo;*/

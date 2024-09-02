@@ -20,7 +20,27 @@ namespace MiniEngineCore {
 
     class MINI_API Logger {
     public:
-        static constexpr const char* LogLevelString[6] = {"[FATAL]:", "[ERROR]:", "[WARN] :", "[DEBUG]:", "[TRACE]:", "[INFO] :"}; 
+
+    #if MINI_ENG_PLATFORM_WINDOWS
+        static constexpr const char* LogLevelString[6] = {
+            "[FATAL]: ",
+            "[ERROR]: ",
+            "[WARN] : ",
+            "[DEBUG]: ",
+            "[TRACE]: ",
+            "[INFO] : "
+        }; 
+    #else
+        static constexpr const char* LogLevelString[6] = {
+            "\033[0;41m[FATAL]:\033[0m ",
+            "\033[1;31m[ERROR]:\033[0m ",
+            "\033[1;33m[WARN] :\033[0m ",
+            "\033[1;34m[DEBUG]:\033[0m ",
+            "\033[1;37m[TRACE]:\033[0m ",
+            "\033[1;32m[INFO] :\033[0m "
+        }; 
+    #endif
+
         MINI_API static bool8 Initialize(void);
         MINI_API static void Deinitialize(void);
         MINI_API static void LogMessage(LogLevel level, const char* msg, ...);
