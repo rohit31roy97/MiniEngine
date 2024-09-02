@@ -1,11 +1,14 @@
 #include "core/Tests.hpp"
 #include "core/Logging.hpp"
 #include "core/MemoryManagement.hpp"
+#include "platform/WindowGLFW.hpp"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 #include <iostream>
 #include <stdexcept>
+#include <chrono>
+#include <thread>
 
 namespace MiniEngineCore {
 
@@ -76,6 +79,16 @@ void TestMemoryMonitor() {
     MemoryMonitor::UpdateAllocations(AllocationType::STACK, AllocationTag::ARRAY, 178979978);
     MLOG_INFO(MemoryMonitor::GetCurrentUsageStatusByTag());
     MemoryMonitor::Deinitialize();
+}
+
+void TestWindowSystem() {
+    Window window;
+    window.initWindow();
+    window.createWindow(800, 800, "MiniEngine Test Window");
+    while(window.keepOpen()) {
+        window.refreshWindowPerFrame();
+    }
+    window.destroyWindow();
 }
 
 }
