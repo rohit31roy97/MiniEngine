@@ -74,15 +74,23 @@ public:
     };
 };
 
+
+// Base virtual MemoryAllocator class:
+class MemoryAllocator {
+public:
+    virtual void* allocate(uint64 size, AllocationTag tag, bool8 aligned) = 0;
+    virtual void deallocate(void* handle) = 0;
+};
+
 // Simple Heap Allocator class:
-class HeapAllocator {
+class HeapAllocator: public MemoryAllocator {
 public:
     // Initialize HeapAllocator instance:
     HeapAllocator(uint64 initial_size);
     // Allocate memory and return pointer to starting address:
-    void* allocate(uint64 size, AllocationTag tag, bool8 aligned);
+    void* allocate(uint64 size, AllocationTag tag, bool8 aligned) override;
     // Deallocate memory pointed to by handle:
-    void deallocate(void* handle);
+    void deallocate(void* handle) override;
     // Deinitialize HeapAllocator instance:
     ~HeapAllocator();
 private:
@@ -105,14 +113,14 @@ private:
 };
 
 // Simple Stack Allocator class:
-class StackAllocator {
+class StackAllocator: public MemoryAllocator {
 public:
     // Initialize StackAllocator instance:
     StackAllocator(uint64 size);
     // Allocate new block from stack:
-    void* allocate(uint64 size, AllocationTag tag, bool8 aligned);
+    void* allocate(uint64 size, AllocationTag tag, bool8 aligned) override;
     // Deallocate last allocation from stack:
-    void deallocate();
+    void deallocate(void* handle) override;
     // Deinitialize StackAllocator instance:
     ~StackAllocator();
 private:
@@ -126,14 +134,14 @@ private:
 };
 
 // Simple Linear Allocator class:
-class LinearAllocator {
+class LinearAllocator: public MemoryAllocator {
 public:
     // Initialize LinearAllocator instance:
     LinearAllocator(uint64 heap_size);
     // Allocate new linear block
-    void* allocate(uint64 size, AllocationTag tag, bool8 aligned);
+    void* allocate(uint64 size, AllocationTag tag, bool8 aligned) override;
     // Deallocate all allocated linear blocks
-    void deallocate();
+    void deallocate(void* handle) override;
     // Deinitialize LinearAllocator instance:
     ~LinearAllocator();
 private:
