@@ -16,24 +16,4 @@ Event::~Event() {
     // TODO: once even is deleted, unregister all callbacks to it from EventManager
 }
 
-
-
-
-/*// Base Event class (All other events should derive from this class)*/
-/*class Event {*/
-/*public:*/
-/*    Event();*/
-/*    ~Event();*/
-/*    EventContext getContext() { return mContext; }*/
-/*    EventType getType() { return mEventType; }*/
-/*    void setContext(EventContext context) { memcpy(&mContext, &context, 128); }*/
-/*    void setType(EventType type) { mEventType = type; }*/
-/*private:*/
-    /*EventContext mContext;*/
-    /*EventType mEventType;*/
-/*};*/
-
-
-
-
 }

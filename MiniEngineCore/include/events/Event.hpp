@@ -1,5 +1,5 @@
 
-:qpragma once
+#pragma once
 
 #include "core/Types.hpp"
 #include <cstring>
