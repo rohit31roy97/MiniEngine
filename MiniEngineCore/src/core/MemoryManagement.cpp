@@ -8,13 +8,19 @@ namespace MiniEngineCore {
 
 /* Class MemoryMonitor Definitions */
 bool8 MemoryMonitor::Initialize() {
+    if (MemoryMonitorIsInitialized) {
+        MLOG_WARN("MemoryMonitor already initialized");
+        return TRUE;
+    }
+
     for (uint64 i = 0; i < (uint64)AllocationTag::MAX_TAGS; i++) {
         TotalSizeByTag[i] = 0;
     }
     for (uint64 i = 0; i < (uint64)AllocationType::MAX_TYPES; i++) {
         TotalSizeByType[i] = 0;
     }
-    // TODO: Run checks for memory related stuff and then return TRUE/FALSE
+    // Future TODO: Run checks for memory related stuff and then return TRUE/FALSE
+    MemoryMonitorIsInitialized = TRUE;
     return TRUE;
 }
 
@@ -56,6 +62,11 @@ char* MemoryMonitor::GetCurrentUsageStatusByTag() {
 }
 
 void MemoryMonitor::Deinitialize() {
+    if (!MemoryMonitorIsInitialized) {
+        MLOG_WARN("Cannot deinitialize, MemoryMonitor not initialized.");
+        return;
+    }
+
     for (uint64 i = 0; i < (uint64)AllocationTag::MAX_TAGS; i++) {
         if (TotalSizeByTag[i] >= 1024) {
             MLOG_ERROR("Memory leak detected in TAG: %s", TagStrings[i]);
@@ -66,8 +77,8 @@ void MemoryMonitor::Deinitialize() {
             MLOG_ERROR("Memory leak detected in TYPE: %s", TypeStrings[i]);
         }
     }
+    MemoryMonitorIsInitialized = FALSE;
     return;
 }
-
 
 }
