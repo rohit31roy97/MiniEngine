@@ -2,7 +2,7 @@
 
 #include "core/Types.hpp"
 #include "core/Logging.hpp"
-#include "core/MemoryManagement.hpp"
+#include "core/Allocators.hpp"
 
 namespace MiniEngineCore {
 
@@ -32,6 +32,7 @@ private:
     uint32 mLength;
     uint32 mElementSize;
     void* mElements;
+
     // expand the array (using a new allocation) to have higher new capacity
     bool8 expandArray(uint32 new_capacity);
 };

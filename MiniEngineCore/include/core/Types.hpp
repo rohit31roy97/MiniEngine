@@ -25,6 +25,8 @@ typedef char bool8;
 
 #define MINVALID_ADDRESS 0
 
+#define MINI_DEBUG
+
 // detfine static asserts based on compiler:
 #if defined(__clang__) || defined(__gcc__)
     #define STATIC_ASSERT _Static_assert
