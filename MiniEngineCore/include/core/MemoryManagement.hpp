@@ -7,6 +7,7 @@ namespace MiniEngineCore {
 enum class AllocationTag: uint16 {
     UNKNOWN,
     ARRAY,
+    STACK,
     DYNAMIC_ARRAY,
     PRIORITY_QUEUE,
     BST,
@@ -38,6 +39,8 @@ enum class AllocationType: uint16 {
 
 // store state of MemoryMonitor
 static bool8 MemoryMonitorIsInitialized = FALSE;
+
+
 
 // Class that stores global information on memory allocations by Engine / App
 class MemoryMonitor {
