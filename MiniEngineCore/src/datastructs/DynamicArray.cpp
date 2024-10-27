@@ -1,4 +1,5 @@
 #include "datastructs/DynamicArray.hpp"
+#include "core/MemoryManagement.hpp"
 #include <cstdlib>
 #include <cstring>
 
@@ -29,37 +30,73 @@ DynamicArray::~DynamicArray() {
 }
 
 void* DynamicArray::getAt(uint32 index) {
-    if (index >= mLength) {
+    // check if index within bound
+    if (index > mLength) {
         MLOG_ERROR("DynamicArray query index out of bounds");
         return 0;
     }
-
+    // return element at query index
     uint8* ptr = (uint8*) mElements;
-    return (ptr + index);
+    return (ptr + index * mElementSize);
 }
 
 bool8 DynamicArray::setAt(uint32 index, void* value) {
-    if (index >= mLength) {
+    // check if index within bounds
+    if (index > mLength) {
         MLOG_ERROR("DynamicArray query index out of bounds");
         return FALSE;
     }
+    // insert value at query index
     uint8* ptr = (uint8*) mElements;
-    ptr = ptr + index;
-    memcpy(ptr, value, mElementSize);
+    memcpy(ptr + index * mElementSize, value, mElementSize);
     return TRUE;
 }
 
 bool8 DynamicArray::insertAt(uint32 index, void* value) {
-    // TODO: 
+    // check if index within bounds
+    if (index >= mLength) {
+        MLOG_ERROR("DynamicArray query index out of bounds");
+        return FALSE;
+    }
+    // if array already at capacity, expand it
+    if (mLength == mCapacity) {
+        this->expandArray(2*mCapacity);
+    }
+    // move elements over to temporary buffer to create space for insertion
+    uint8* ptr = (uint8*) mElements;
+    uint32 temp_size = (mLength-index)*mElementSize;
+    uint8* tmp = (uint8*) mAllocator->allocate(temp_size, AllocationTag::ARRAY, FALSE);
+    if (tmp == 0) {
+        MLOG_ERROR("Allocator failed to allocate memory for temporary buffer");
+        return FALSE;
+    }
+    // insert element and swap between self and temp buffer
+    memcpy(tmp, ptr+index, temp_size);
+    memcpy(ptr+index, value, mElementSize);
+    memcpy(ptr+index+1, tmp, temp_size);
+    mAllocator->deallocate(tmp, AllocationTag::ARRAY, temp_size);
+    mLength += 1;
+    return TRUE;
 }
 
 bool8 DynamicArray::removeFrom(uint32 index) {
-    // TODO:
+    // check if index within bounds
+    if (index >= mLength) {
+        MLOG_ERROR("DynamicArray query index out of bounds");
+        return FALSE;
+    }
+    // move elements over one byte at a time
+    uint8* ptr = (uint8*)mElements;
+    memcpy(ptr+index, ptr+index+1, (mLength-index-1));
+    memset(ptr+mLength, 0, mElementSize);
+    mLength -= 1;
+    return TRUE;
 }
 
 bool8 DynamicArray::copyFromList(void* list, uint32 num_elements) {
     if (num_elements > mCapacity) {
         if (!this->expandArray(mCapacity * 2)) {
+            MLOG_ERROR("Allocator failed to allocate memory for DynamicArray");
             return FALSE;
         }
     }
